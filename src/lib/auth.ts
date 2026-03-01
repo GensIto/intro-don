@@ -9,10 +9,17 @@ export const auth = betterAuth({
     provider: "sqlite",
   }),
   socialProviders: {
-    spotify: {
-      clientId: env.SPOTIFY_CLIENT_ID as string,
-      clientSecret: env.SPOTIFY_CLIENT_SECRET as string,
+    google: {
+      clientId: env.GOOGLE_CLIENT_ID as string,
+      clientSecret: env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://127.0.0.1:3000",
+    "https://intro-don.gensito1121.workers.dev",
+  ],
   plugins: [tanstackStartCookies()],
 });
