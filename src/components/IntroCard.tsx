@@ -4,7 +4,7 @@ import { useYouTubePlayer } from "@/lib/youtube-player";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 
 interface Intro {
   id: string;
@@ -27,23 +27,27 @@ interface Props {
 export function IntroCard({ intro, onPlay, onStop, onDeleted }: Props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [loadingType, setLoadingType] = useState<'start' | 'chorus' | null>(null);
   const youtubePlayer = useYouTubePlayer();
 
   const startSec = intro.startMs / 1000;
   const chorusSec = intro.chorusMs / 1000;
 
-  async function playFrom(ms: number) {
+  async function playFrom(ms: number, type: 'start' | 'chorus') {
     if (!youtubePlayer.isReady) {
       console.error("YouTube player not ready");
       return;
     }
 
+    setLoadingType(type);
     try {
       await youtubePlayer.play(intro.youtubeVideoId, ms / 1000);
       setIsPlaying(true);
       onPlay();
     } catch (error) {
       console.error("YouTube playback error:", error);
+    } finally {
+      setLoadingType(null);
     }
   }
 
@@ -82,7 +86,9 @@ export function IntroCard({ intro, onPlay, onStop, onDeleted }: Props) {
             </div>
           )}
           <div className='flex-1 min-w-0'>
-            <p className='text-white font-semibold truncate'>{intro.trackName}</p>
+            <p className='text-white font-semibold truncate'>
+              {intro.trackName}
+            </p>
             <p className='text-gray-400 text-sm truncate'>{intro.artistName}</p>
             <p className='text-gray-500 text-xs mt-0.5'>
               Start: {startSec.toFixed(1)}秒 | Chorus: {chorusSec.toFixed(1)}秒
@@ -102,53 +108,55 @@ export function IntroCard({ intro, onPlay, onStop, onDeleted }: Props) {
 
         <div className='space-y-3'>
           {youtubePlayer.isReady && (
-            <Badge variant='outline' className='bg-green-900/20 text-green-400 border-green-800'>
+            <Badge
+              variant='outline'
+              className='bg-green-900/20 text-green-400 border-green-800'
+            >
               ✓ YouTube Player準備完了
             </Badge>
           )}
 
           <div className='flex gap-2 flex-wrap'>
             <Button
-              onClick={() => playFrom(intro.startMs)}
-              disabled={!youtubePlayer.isReady}
+              onClick={() => playFrom(intro.startMs, 'start')}
+              disabled={!youtubePlayer.isReady || loadingType !== null}
               size='sm'
               className='bg-blue-600 hover:bg-blue-700'
             >
-              ▶ Start ({startSec.toFixed(1)}s)
+              {loadingType === 'start' ? (
+                <>
+                  <Loader2 className='h-4 w-4 mr-1 animate-spin' />
+                  読み込み中...
+                </>
+              ) : (
+                `▶ Start (${startSec.toFixed(1)}s)`
+              )}
             </Button>
             <Button
-              onClick={() => playFrom(intro.chorusMs)}
-              disabled={!youtubePlayer.isReady}
+              onClick={() => playFrom(intro.chorusMs, 'chorus')}
+              disabled={!youtubePlayer.isReady || loadingType !== null}
               size='sm'
               className='bg-cyan-600 hover:bg-cyan-700'
             >
-              ▶ サビ ({chorusSec.toFixed(1)}s)
+              {loadingType === 'chorus' ? (
+                <>
+                  <Loader2 className='h-4 w-4 mr-1 animate-spin' />
+                  読み込み中...
+                </>
+              ) : (
+                `▶ サビ (${chorusSec.toFixed(1)}s)`
+              )}
             </Button>
             {isPlaying && (
               <Button
                 onClick={pause}
                 disabled={!youtubePlayer.isReady}
-                variant='secondary'
+                variant='outline'
                 size='sm'
-                className='bg-slate-700 hover:bg-slate-600'
               >
                 ⏸ 停止
               </Button>
             )}
-            <Button
-              asChild
-              variant='destructive'
-              size='sm'
-              className='bg-red-600 hover:bg-red-700'
-            >
-              <a
-                href={intro.youtubeUrl}
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                YouTubeで開く ↗
-              </a>
-            </Button>
           </div>
         </div>
       </CardContent>

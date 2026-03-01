@@ -67,16 +67,6 @@ function SearchPage() {
           {isSearching ? "検索中..." : "検索"}
         </Button>
       </form>
-
-      <div className="text-sm text-gray-400 mb-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
-        <p className="font-semibold mb-2">検索のヒント:</p>
-        <ul className="list-disc list-inside space-y-1">
-          <li>アーティスト名と曲名で検索（例: YOASOBI アイドル）</li>
-          <li>YouTube動画URLを直接入力（例: https://www.youtube.com/watch?v=VIDEO_ID）</li>
-          <li>動画IDを直接入力（例: dQw4w9WgXcQ）</li>
-        </ul>
-      </div>
-
       {error && <p className='text-gray-400 text-center mb-6'>{error}</p>}
 
       <div className='space-y-3'>

@@ -34,21 +34,27 @@ export default function Header() {
             <span className='text-gray-400 text-sm hidden sm:inline'>
               {session.user.name}
             </span>
-            <Button variant='link' asChild size='sm' className='text-cyan-400 hover:text-cyan-300'>
-              <Link to='/search'>
-                検索
-              </Link>
+            <Button
+              variant='link'
+              asChild
+              size='sm'
+              className='text-cyan-400 hover:text-cyan-300'
+            >
+              <Link to='/search'>検索</Link>
             </Button>
-            <Button variant='link' asChild size='sm' className='text-cyan-400 hover:text-cyan-300'>
-              <Link to='/intros'>
-                一覧
-              </Link>
+            <Button
+              variant='link'
+              asChild
+              size='sm'
+              className='text-cyan-400 hover:text-cyan-300'
+            >
+              <Link to='/intros'>一覧</Link>
             </Button>
             <Button
               onClick={handleSignOut}
-              variant='secondary'
+              variant='outline'
               size='sm'
-              className='bg-gray-700 hover:bg-gray-600'
+              className='text-black'
             >
               ログアウト
             </Button>

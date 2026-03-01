@@ -24,12 +24,12 @@ export function extractVideoId(input: string): string | null {
     const url = new URL(input);
 
     // youtube.com形式
-    if (url.hostname.includes('youtube.com')) {
-      return url.searchParams.get('v');
+    if (url.hostname.includes("youtube.com")) {
+      return url.searchParams.get("v");
     }
 
     // youtu.be形式
-    if (url.hostname === 'youtu.be') {
+    if (url.hostname === "youtu.be") {
       return url.pathname.slice(1);
     }
   } catch {
@@ -48,7 +48,7 @@ export function extractVideoId(input: string): string | null {
 export async function searchYouTubeVideos(
   query: string,
   apiKey: string,
-  maxResults: number = 10
+  maxResults: number = 10,
 ): Promise<YouTubeVideo[]> {
   if (!query || query.trim().length === 0) {
     return [];
@@ -61,27 +61,27 @@ export async function searchYouTubeVideos(
   }
 
   // 検索APIを使用
-  const searchUrl = new URL('https://www.googleapis.com/youtube/v3/search');
-  searchUrl.searchParams.set('part', 'snippet');
-  searchUrl.searchParams.set('q', query.trim());
-  searchUrl.searchParams.set('type', 'video');
-  searchUrl.searchParams.set('videoCategoryId', '10'); // 音楽カテゴリ
-  searchUrl.searchParams.set('maxResults', maxResults.toString());
-  searchUrl.searchParams.set('key', apiKey);
+  const searchUrl = new URL("https://www.googleapis.com/youtube/v3/search");
+  searchUrl.searchParams.set("part", "snippet");
+  searchUrl.searchParams.set("q", query.trim());
+  searchUrl.searchParams.set("type", "video");
+  searchUrl.searchParams.set("videoCategoryId", "10"); // 音楽カテゴリ
+  searchUrl.searchParams.set("maxResults", maxResults.toString());
+  searchUrl.searchParams.set("key", apiKey);
 
-  console.log('YouTube search query:', query);
-  console.log('YouTube search URL:', searchUrl.toString());
+  console.log("YouTube search query:", query);
+  console.log("YouTube search URL:", searchUrl.toString());
 
   const resp = await fetch(searchUrl.toString());
 
   if (!resp.ok) {
     const errorBody = await resp.text();
-    console.error('YouTube search error:', resp.status, errorBody);
+    console.error("YouTube search error:", resp.status, errorBody);
     throw new Error(`YouTube search failed: ${resp.status} - ${errorBody}`);
   }
 
-  const data = await resp.json();
-  console.log('YouTube search results:', data.items?.length || 0, 'videos');
+  const data = (await resp.json()) as any;
+  console.log("YouTube search results:", data.items?.length || 0, "videos");
 
   return (data.items || []).map((item: any) => ({
     id: item.id.videoId,
@@ -96,22 +96,24 @@ export async function searchYouTubeVideos(
  */
 async function getVideoById(
   videoId: string,
-  apiKey: string
+  apiKey: string,
 ): Promise<YouTubeVideo[]> {
-  const videoUrl = new URL('https://www.googleapis.com/youtube/v3/videos');
-  videoUrl.searchParams.set('part', 'snippet');
-  videoUrl.searchParams.set('id', videoId);
-  videoUrl.searchParams.set('key', apiKey);
+  const videoUrl = new URL("https://www.googleapis.com/youtube/v3/videos");
+  videoUrl.searchParams.set("part", "snippet");
+  videoUrl.searchParams.set("id", videoId);
+  videoUrl.searchParams.set("key", apiKey);
 
   const resp = await fetch(videoUrl.toString());
 
   if (!resp.ok) {
     const errorBody = await resp.text();
-    console.error('YouTube video fetch error:', resp.status, errorBody);
-    throw new Error(`YouTube video fetch failed: ${resp.status} - ${errorBody}`);
+    console.error("YouTube video fetch error:", resp.status, errorBody);
+    throw new Error(
+      `YouTube video fetch failed: ${resp.status} - ${errorBody}`,
+    );
   }
 
-  const data = await resp.json();
+  const data = (await resp.json()) as any;
 
   if (!data.items || data.items.length === 0) {
     return [];
