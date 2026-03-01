@@ -1,0 +1,1 @@
+ALTER TABLE `intros` ADD `start_ms` integer DEFAULT 0 NOT NULL;

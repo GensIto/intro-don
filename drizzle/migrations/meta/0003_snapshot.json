@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "5b07d064-454b-4be0-8db8-dd0d50352cf5",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "cd6e5f30-610b-4c16-957b-428db5cad4a1",
+  "prevId": "8990490d-10bf-4a6c-a3de-496dc0dbb3b4",
   "tables": {
     "account": {
       "name": "account",
@@ -407,6 +407,14 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "start_ms": {
+          "name": "start_ms",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
         },
         "chorus_ms": {
           "name": "chorus_ms",
