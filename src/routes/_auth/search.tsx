@@ -4,6 +4,9 @@ import { searchVideosFn } from "@/server/youtube";
 import type { YouTubeVideo } from "@/lib/youtube";
 import { VideoSearchResult } from "@/components/TrackSearchResult";
 import { SaveIntroDialog } from "@/components/SaveIntroDialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export const Route = createFileRoute("/_auth/search")({
   component: SearchPage,
@@ -49,20 +52,20 @@ function SearchPage() {
       <h1 className='text-3xl font-bold text-white mb-6'>YouTube動画検索</h1>
 
       <form onSubmit={handleSearch} className='flex gap-3 mb-8'>
-        <input
+        <Input
           type='text'
           placeholder='アーティスト名・曲名・YouTube URLで検索...'
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className='flex-1 px-4 py-2.5 bg-slate-800 text-white rounded-lg border border-slate-600 focus:outline-none focus:border-cyan-500 placeholder:text-slate-400'
+          className='flex-1 bg-slate-800 text-white border-slate-600 focus:border-cyan-500 placeholder:text-slate-400'
         />
-        <button
+        <Button
           type='submit'
           disabled={isSearching || !query.trim()}
-          className='px-6 py-2.5 bg-cyan-500 hover:bg-cyan-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-colors'
+          className='bg-cyan-500 hover:bg-cyan-600'
         >
           {isSearching ? "検索中..." : "検索"}
-        </button>
+        </Button>
       </form>
 
       <div className="text-sm text-gray-400 mb-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
@@ -84,9 +87,9 @@ function SearchPage() {
               onSave={() => setSelectedVideo(video)}
             />
             {savedIds.has(video.id) && (
-              <span className='absolute top-2 right-2 text-xs bg-green-800 text-green-300 px-2 py-0.5 rounded-full'>
+              <Badge className='absolute top-2 right-2 bg-green-800 text-green-300 hover:bg-green-800'>
                 保存済み
-              </span>
+              </Badge>
             )}
           </div>
         ))}

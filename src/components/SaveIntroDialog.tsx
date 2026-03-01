@@ -1,6 +1,16 @@
 import { useState } from "react";
 import type { YouTubeVideo } from "@/lib/youtube";
 import { saveIntroFn } from "@/server/youtube";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   video: YouTubeVideo;
@@ -52,19 +62,13 @@ export function SaveIntroDialog({ video, onClose, onSaved }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-md space-y-5 shadow-2xl border border-slate-700">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">楽曲情報を入力</h2>
-          <button
-            onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors"
-          >
-            ✕
-          </button>
-        </div>
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="bg-slate-800 border-slate-700 text-white sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>楽曲情報を入力</DialogTitle>
+        </DialogHeader>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 py-3">
           {thumbnail && (
             <img
               src={thumbnail}
@@ -78,71 +82,75 @@ export function SaveIntroDialog({ video, onClose, onSaved }: Props) {
           </div>
         </div>
 
-        <div className="space-y-3">
-          <div>
-            <label className="text-gray-300 text-sm block mb-1">
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="artistName" className="text-gray-300">
               アーティスト名 <span className="text-red-400">*</span>
-            </label>
-            <input
+            </Label>
+            <Input
+              id="artistName"
               type="text"
               value={artistName}
               onChange={(e) => setArtistName(e.target.value)}
               placeholder="例: YOASOBI"
-              className="w-full px-3 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:outline-none focus:border-cyan-500"
+              className="bg-slate-700 border-slate-600 text-white focus:border-cyan-500"
             />
           </div>
 
-          <div>
-            <label className="text-gray-300 text-sm block mb-1">
+          <div className="space-y-2">
+            <Label htmlFor="trackName" className="text-gray-300">
               曲名 <span className="text-red-400">*</span>
-            </label>
-            <input
+            </Label>
+            <Input
+              id="trackName"
               type="text"
               value={trackName}
               onChange={(e) => setTrackName(e.target.value)}
               placeholder="例: アイドル"
-              className="w-full px-3 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:outline-none focus:border-cyan-500"
+              className="bg-slate-700 border-slate-600 text-white focus:border-cyan-500"
             />
           </div>
 
-          <div>
-            <label className="text-gray-300 text-sm block mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="startSec" className="text-gray-300">
               開始位置 (Start):{" "}
               <span className="text-cyan-400 font-mono">
                 {startSec.toFixed(1)}秒
               </span>
-            </label>
-            <input
+            </Label>
+            <Input
+              id="startSec"
               type="number"
               min={0}
               step={0.1}
               value={startSec}
               onChange={(e) => setStartSec(Math.max(0, Number(e.target.value)))}
               placeholder="例: 0"
-              className="w-full px-3 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:outline-none focus:border-cyan-500"
+              className="bg-slate-700 border-slate-600 text-white focus:border-cyan-500"
             />
-            <p className="text-gray-500 text-xs mt-1">
+            <p className="text-gray-500 text-xs">
               イントロの開始位置を秒で指定してください
             </p>
           </div>
 
-          <div>
-            <label className="text-gray-300 text-sm block mb-2">
+          <div className="space-y-2">
+            <Label htmlFor="chorusSec" className="text-gray-300">
               サビ位置 (Chorus):{" "}
               <span className="text-cyan-400 font-mono">
                 {chorusSec.toFixed(1)}秒
               </span>
-            </label>
-            <input
+            </Label>
+            <Input
+              id="chorusSec"
               type="number"
               min={0}
               step={0.1}
               value={chorusSec}
               onChange={(e) => setChorusSec(Math.max(0, Number(e.target.value)))}
               placeholder="例: 45"
-              className="w-full px-3 py-2 bg-slate-700 text-white rounded-lg border border-slate-600 focus:outline-none focus:border-cyan-500"
+              className="bg-slate-700 border-slate-600 text-white focus:border-cyan-500"
             />
-            <p className="text-gray-500 text-xs mt-1">
+            <p className="text-gray-500 text-xs">
               サビの開始位置を秒で指定してください
             </p>
           </div>
@@ -154,22 +162,23 @@ export function SaveIntroDialog({ video, onClose, onSaved }: Props) {
           </p>
         )}
 
-        <div className="flex gap-3">
-          <button
+        <DialogFooter className="gap-2">
+          <Button
             onClick={onClose}
-            className="flex-1 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+            variant="secondary"
+            className="bg-slate-700 hover:bg-slate-600"
           >
             キャンセル
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="flex-1 py-2.5 bg-cyan-500 hover:bg-cyan-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-colors"
+            className="bg-cyan-500 hover:bg-cyan-600"
           >
             {isSaving ? "保存中..." : "保存"}
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

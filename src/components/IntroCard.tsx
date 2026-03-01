@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { deleteIntroFn } from "@/server/youtube";
 import { useYouTubePlayer } from "@/lib/youtube-player";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Trash2 } from "lucide-react";
 
 interface Intro {
   id: string;
@@ -63,77 +67,91 @@ export function IntroCard({ intro, onPlay, onStop, onDeleted }: Props) {
   }
 
   return (
-    <div className='bg-slate-800 rounded-xl p-4 border border-slate-700'>
-      <div className='flex items-center gap-4 mb-4'>
-        {intro.imageUrl ? (
-          <img
-            src={intro.imageUrl}
-            alt={intro.trackName}
-            className='w-16 h-16 rounded-lg object-cover flex-shrink-0'
-          />
-        ) : (
-          <div className='w-16 h-16 rounded-lg flex-shrink-0 bg-slate-700 flex items-center justify-center text-slate-400 text-2xl'>
-            ♪
-          </div>
-        )}
-        <div className='flex-1 min-w-0'>
-          <p className='text-white font-semibold truncate'>{intro.trackName}</p>
-          <p className='text-gray-400 text-sm truncate'>{intro.artistName}</p>
-          <p className='text-gray-500 text-xs mt-0.5'>
-            Start: {startSec.toFixed(1)}秒 | Chorus: {chorusSec.toFixed(1)}秒
-          </p>
-        </div>
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          className='p-2 text-slate-500 hover:text-red-400 transition-colors disabled:opacity-50 flex-shrink-0'
-          title='削除'
-        >
-          {isDeleting ? "..." : "🗑"}
-        </button>
-      </div>
-
-      <div className='space-y-3'>
-        {youtubePlayer.isReady && (
-          <div className='flex items-center gap-2 text-xs text-green-400 bg-green-900/20 px-3 py-1.5 rounded-lg'>
-            <span>✓ YouTube Player準備完了</span>
-          </div>
-        )}
-
-        <div className='flex gap-2 flex-wrap'>
-          <button
-            onClick={() => playFrom(intro.startMs)}
-            disabled={!youtubePlayer.isReady}
-            className='px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50'
-          >
-            ▶ Start ({startSec.toFixed(1)}s)
-          </button>
-          <button
-            onClick={() => playFrom(intro.chorusMs)}
-            disabled={!youtubePlayer.isReady}
-            className='px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50'
-          >
-            ▶ サビ ({chorusSec.toFixed(1)}s)
-          </button>
-          {isPlaying && (
-            <button
-              onClick={pause}
-              disabled={!youtubePlayer.isReady}
-              className='px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg transition-colors disabled:opacity-50'
-            >
-              ⏸ 停止
-            </button>
+    <Card className='bg-slate-800 border-slate-700'>
+      <CardContent className='p-4'>
+        <div className='flex items-center gap-4 mb-4'>
+          {intro.imageUrl ? (
+            <img
+              src={intro.imageUrl}
+              alt={intro.trackName}
+              className='w-16 h-16 rounded-lg object-cover shrink-0'
+            />
+          ) : (
+            <div className='w-16 h-16 rounded-lg shrink-0 bg-slate-700 flex items-center justify-center text-slate-400 text-2xl'>
+              ♪
+            </div>
           )}
-          <a
-            href={intro.youtubeUrl}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors'
+          <div className='flex-1 min-w-0'>
+            <p className='text-white font-semibold truncate'>{intro.trackName}</p>
+            <p className='text-gray-400 text-sm truncate'>{intro.artistName}</p>
+            <p className='text-gray-500 text-xs mt-0.5'>
+              Start: {startSec.toFixed(1)}秒 | Chorus: {chorusSec.toFixed(1)}秒
+            </p>
+          </div>
+          <Button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            variant='ghost'
+            size='icon'
+            className='shrink-0 text-slate-500 hover:text-red-400'
+            title='削除'
           >
-            YouTubeで開く ↗
-          </a>
+            {isDeleting ? "..." : <Trash2 className='h-5 w-5' />}
+          </Button>
         </div>
-      </div>
-    </div>
+
+        <div className='space-y-3'>
+          {youtubePlayer.isReady && (
+            <Badge variant='outline' className='bg-green-900/20 text-green-400 border-green-800'>
+              ✓ YouTube Player準備完了
+            </Badge>
+          )}
+
+          <div className='flex gap-2 flex-wrap'>
+            <Button
+              onClick={() => playFrom(intro.startMs)}
+              disabled={!youtubePlayer.isReady}
+              size='sm'
+              className='bg-blue-600 hover:bg-blue-700'
+            >
+              ▶ Start ({startSec.toFixed(1)}s)
+            </Button>
+            <Button
+              onClick={() => playFrom(intro.chorusMs)}
+              disabled={!youtubePlayer.isReady}
+              size='sm'
+              className='bg-cyan-600 hover:bg-cyan-700'
+            >
+              ▶ サビ ({chorusSec.toFixed(1)}s)
+            </Button>
+            {isPlaying && (
+              <Button
+                onClick={pause}
+                disabled={!youtubePlayer.isReady}
+                variant='secondary'
+                size='sm'
+                className='bg-slate-700 hover:bg-slate-600'
+              >
+                ⏸ 停止
+              </Button>
+            )}
+            <Button
+              asChild
+              variant='destructive'
+              size='sm'
+              className='bg-red-600 hover:bg-red-700'
+            >
+              <a
+                href={intro.youtubeUrl}
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                YouTubeで開く ↗
+              </a>
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,5 +1,6 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import { authClient } from "@/lib/auth-client";
+import { Button } from "@/components/ui/button";
 
 export default function Header() {
   const { data: session } = authClient.useSession();
@@ -33,31 +34,33 @@ export default function Header() {
             <span className='text-gray-400 text-sm hidden sm:inline'>
               {session.user.name}
             </span>
-            <Link
-              to='/search'
-              className='px-3 py-1.5 text-sm text-cyan-400 hover:text-cyan-300 transition-colors'
-            >
-              検索
-            </Link>
-            <Link
-              to='/intros'
-              className='px-3 py-1.5 text-sm text-cyan-400 hover:text-cyan-300 transition-colors'
-            >
-              一覧
-            </Link>
-            <button
+            <Button variant='link' asChild size='sm' className='text-cyan-400 hover:text-cyan-300'>
+              <Link to='/search'>
+                検索
+              </Link>
+            </Button>
+            <Button variant='link' asChild size='sm' className='text-cyan-400 hover:text-cyan-300'>
+              <Link to='/intros'>
+                一覧
+              </Link>
+            </Button>
+            <Button
               onClick={handleSignOut}
-              className='px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-sm rounded-lg transition-colors'
+              variant='secondary'
+              size='sm'
+              className='bg-gray-700 hover:bg-gray-600'
             >
               ログアウト
-            </button>
+            </Button>
           </>
         ) : (
-          <button
+          <Button
             onClick={handleGoogleLogin}
-            className='px-4 py-2 bg-white hover:bg-gray-100 text-gray-800 text-sm font-medium rounded-lg transition-colors flex items-center gap-2 border border-gray-300'
+            variant='outline'
+            size='sm'
+            className='bg-white hover:bg-gray-100 text-gray-800 border-gray-300'
           >
-            <svg className='w-5 h-5' viewBox='0 0 24 24'>
+            <svg className='w-5 h-5 mr-2' viewBox='0 0 24 24'>
               <path
                 fill='#4285F4'
                 d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'
@@ -76,7 +79,7 @@ export default function Header() {
               />
             </svg>
             Googleでログイン
-          </button>
+          </Button>
         )}
       </div>
     </header>

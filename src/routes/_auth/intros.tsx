@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { getIntrosFn } from "@/server/youtube";
 import { IntroCard } from "@/components/IntroCard";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_auth/intros")({
   loader: async () => {
@@ -32,12 +33,11 @@ function IntrosPage() {
         <p className="text-gray-500 mb-6">
           楽曲を検索してイントロを保存しましょう
         </p>
-        <Link
-          to="/search"
-          className="inline-block px-6 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-colors"
-        >
-          楽曲を検索する
-        </Link>
+        <Button asChild className="bg-cyan-500 hover:bg-cyan-600">
+          <Link to="/search">
+            楽曲を検索する
+          </Link>
+        </Button>
       </div>
     );
   }
@@ -46,12 +46,11 @@ function IntrosPage() {
     <div className="max-w-3xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-white">イントロ一覧</h1>
-        <Link
-          to="/search"
-          className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium rounded-lg transition-colors"
-        >
-          + 追加
-        </Link>
+        <Button asChild size="sm" className="bg-cyan-500 hover:bg-cyan-600">
+          <Link to="/search">
+            + 追加
+          </Link>
+        </Button>
       </div>
 
       <div className="space-y-4">
